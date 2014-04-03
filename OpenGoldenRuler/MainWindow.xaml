@@ -33,6 +33,7 @@
                     <MenuItem  Header="Drop pin (Ctrl+D)" x:Name="btnDropPin" Click="MenuItem_OnClick" IsEnabled="True"/>
                     <MenuItem  Header="Clear pins (Ctrl+C)" x:Name="btnClearPins" Click="MenuItem_OnClick" IsEnabled="True"/>
                     <MenuItem  Header="Close (ESC)" Click="MenuItem_OnClick" IsEnabled="True"/>
+                    <MenuItem  Header="About open golden ruler" Click="MenuItem_OnClick" IsEnabled="True"/>
                 </ContextMenu>
             </wpf:Ruler.ContextMenu>
         </wpf:Ruler>

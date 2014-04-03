@@ -249,6 +249,10 @@ namespace OpenGoldenRuler
             {
                 this.Close();
             }
+            else if (item.Header.ToString().ToLower().StartsWith("about open golden ruler"))
+            {
+                System.Diagnostics.Process.Start("http://hgbink.github.io/OpenGoldenRuler/");
+            }
         }
 
 
