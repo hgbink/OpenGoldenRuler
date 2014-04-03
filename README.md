@@ -10,9 +10,11 @@ who would need to measure the gaps between different units on screen
 who spend a lot of time to make sure the design is vertically and horizontally aligned
 who always want to make the designs perfect:)
 
+To visit the home page, please visit http://hgbink.github.io/OpenGoldenRuler/
+
 It is based on WPF and .NET 4.5.
 
-This project is under GNU v2 License.
+This project is under GNU v2 License.  
 
 
 Key features
@@ -24,7 +26,10 @@ A rectangle and curve will show according to the measurements you have
 Allow drop pins on screen
 Automatically measure the gaps between each pin on screen
 Most context menu buttons have hot key options
+
+
 Reference
+
 https://code.google.com/p/jawiweb/
 
 http://billsautomation.blogspot.com.au/2014/03/introduction-purpose-of-this-screen.html
