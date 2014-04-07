@@ -11,35 +11,82 @@ using System.Windows.Media.Animation;
 namespace OpenGoldenRuler
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// This is the main canvas window for this application.
+    /// It contains the root canvas which holds the ruler, golden spiral, and all the pins.
+    /// The window is frameless and will always stay on top.
     /// </summary>
     public partial class MainWindow : Window
     {
         #region Fields
-        private bool _isMouseLeftButtonDown = false;
-
+        /// <summary>
+        /// The minimum length for the ruler. 
+        /// While users move mouse on the ruler, the length of the ruler will change. 
+        /// However, we don't want the ruler length to be shorter than a certain length because if it is too short, the ruler will look ugly and become unusable.
+        /// This is why we need the Min_Ruler_Length.
+        /// </summary>
         private const int MIN_RULER_LENGTH = 550;
 
+        /// <summary>
+        /// This is only used in adjusting the ruler length while users move their mouse on the ruler.
+        /// It should be less than MIN_RULER_LENGTH and greater than 0.
+        /// It can be adjusted for better user experience.
+        /// </summary>
         private const int MIN_RULER_READING = 200;
 
+        /// <summary>
+        /// Used to make sure the height of the ruler does not become smaller than a certain height
+        /// </summary>
         private const int MIN_RULER_HEIGHT = 80;
 
+        /// <summary>
+        /// Pin is useful for measuring gaps and hunting horizontal or vertical alighment issues.
+        /// This constant is used to adjust the lengh of the pin as you need.
+        /// </summary>
         private const int PIN_LENGTH = 2000;
 
+        /// <summary>
+        /// In mathematics, two quantities are in the golden ratio if their ratio is the same as the ratio of their sum to the larger of the two quantities.
+        /// The Golden Ratio is what we call an irrational number: it has an infinite number of decimal places and it never repeats itself!
+        /// </summary>
         private const double GOLDEN_RATIO = 1.618;
 
+        /// <summary>
+        /// Used to indicate if the left mouse is pressed and hold down at the moment
+        /// </summary>
+        private bool _isMouseLeftButtonDown = false;
+
+        /// <summary>
+        /// The STARTPOINT_X, and STARTPOINT_Y are used to set the start point of the ruler on the canvas
+        /// </summary>
         private double STARTPOINT_X = 0;
         private double STARTPOINT_Y = 0;
 
+        /// <summary>
+        /// The current angle is the angle between the ruler and the horizontal line.
+        /// Only 0 and 90 are supported at the moment.
+        /// 0 means the ruler is currently horizontal
+        /// 90 means the ruler is currently vertial
+        /// </summary>
         private int _currentAngle = 0;
 
+        /// <summary>
+        /// Used to store all the pins user placed
+        /// </summary>
         private List<PinLine> _pins= new List<PinLine>();
 
-        private RulerModes _currentMode = RulerModes.GoldenRectangle;
+        /// <summary>
+        /// Indicate the mode the ruler is working on
+        /// </summary>
+        private RulerModes _currentMode = RulerModes.GoldenSpiral;
 
+        /// <summary>
+        /// This control is used to measure the distance between different pins
+        /// </summary>
         private GapMeasurer _gapMeasurer = null;
 
         #endregion
+
+        #region Constructor
 
         public MainWindow()
         {
@@ -53,52 +100,9 @@ namespace OpenGoldenRuler
 
             Loaded += MainWindow_Loaded;
             this.KeyDown += MainWindow_KeyDown;
-        }
+        } 
+        #endregion
 
-        void MainWindow_KeyDown(object sender, KeyEventArgs e)
-        {
-            // Ctrl + D
-            if ((Keyboard.Modifiers == ModifierKeys.Control) && (e.Key == Key.D))
-            {
-                if (_currentMode == RulerModes.Pin)
-                {
-                    if (btnDropPin.Header.ToString().StartsWith("remove pin")) RemoveCurrentMouseOverPin();
-                    else DropPin();
-                }
-            }
-            // Ctrl + R
-            else if ((Keyboard.Modifiers == ModifierKeys.Control) && (e.Key == Key.C))
-            {
-                if (_currentMode == RulerModes.Pin)
-                {
-                    RemovePins();
-                }
-            }
-            else if  (e.Key == Key.Escape)
-            {
-                Close();
-            }
-            else if ((Keyboard.Modifiers == ModifierKeys.Control) && (e.Key == Key.R))
-            {
-                RotateRuler();
-            }
-            else if ((Keyboard.Modifiers == ModifierKeys.Control) && (e.Key == Key.M))
-            {
-                if (_currentMode == RulerModes.Pin)
-                {
-                    _currentMode = RulerModes.None;
-                }
-                else if (_currentMode == RulerModes.None)
-                {
-                    _currentMode = RulerModes.GoldenRectangle;
-                }
-                else
-                {
-                    _currentMode = RulerModes.Pin;
-                }
-                UpdateContextMenuButtons();
-            }
-        }
 
         #region Properties
         /// <summary>
@@ -170,7 +174,56 @@ namespace OpenGoldenRuler
 
         #region Event Handlers
         /// <summary>
-        /// Used to initialise the position of the ruler
+        /// Used to handle the hot keys.
+        /// For example, Ctrl + D means drop pin.
+        /// </summary>
+        void MainWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Ctrl + D
+            if ((Keyboard.Modifiers == ModifierKeys.Control) && (e.Key == Key.D))
+            {
+                if (_currentMode == RulerModes.Pin)
+                {
+                    if (btnDropPin.Header.ToString().StartsWith("remove pin")) RemoveCurrentMouseOverPin();
+                    else DropPin();
+                }
+            }
+            // Ctrl + R
+            else if ((Keyboard.Modifiers == ModifierKeys.Control) && (e.Key == Key.C))
+            {
+                if (_currentMode == RulerModes.Pin)
+                {
+                    RemovePins();
+                }
+            }
+            else if (e.Key == Key.Escape)
+            {
+                Close();
+            }
+            else if ((Keyboard.Modifiers == ModifierKeys.Control) && (e.Key == Key.R))
+            {
+                RotateRuler();
+            }
+            else if ((Keyboard.Modifiers == ModifierKeys.Control) && (e.Key == Key.M))
+            {
+                if (_currentMode == RulerModes.Pin)
+                {
+                    _currentMode = RulerModes.None;
+                }
+                else if (_currentMode == RulerModes.None)
+                {
+                    _currentMode = RulerModes.GoldenSpiral;
+                }
+                else
+                {
+                    _currentMode = RulerModes.Pin;
+                }
+                UpdateContextMenuButtons();
+            }
+        }
+
+        /// <summary>
+        /// Used to initialise the position of the ruler and update other supporting controls and buttons
         /// </summary>
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -201,9 +254,9 @@ namespace OpenGoldenRuler
             {
                 RotateRuler();
             }
-            else if (item.Header.ToString().ToLower().StartsWith("golden rectangle"))
+            else if (item.Header.ToString().ToLower().StartsWith("golden spiral"))
             {
-                _currentMode = RulerModes.GoldenRectangle;
+                _currentMode = RulerModes.GoldenSpiral;
                 UpdateContextMenuButtons();
             }
             else if (item.Header.ToString().ToLower().StartsWith("pin"))
@@ -255,7 +308,6 @@ namespace OpenGoldenRuler
             }
         }
 
-
         #region Drag & Drop
         void XRuler_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
@@ -301,12 +353,18 @@ namespace OpenGoldenRuler
         #endregion
 
         #region Private methods
+        /// <summary>
+        /// The function is used to drop a pin in the canvas
+        /// </summary>
         private void DropPin()
         {
             CurrentPin.Text = XRuler.CurrentReading.ToString();
             CurrentPin = new PinLine() { CurrentAngle = this._currentAngle, IsHitTestVisible = false, Length = PIN_LENGTH, Color = GoldenUtils.ColorStack[(_pins.Count + 1) % GoldenUtils.ColorStack.Count] };
         }
 
+        /// <summary>
+        /// When the current mouse position is on top of an existing pin, we want to remove this pin instead of add another pin
+        /// </summary>
         private void RemoveCurrentMouseOverPin()
         {
             CurrentPin.Text = XRuler.CurrentReading.ToString();
@@ -340,7 +398,7 @@ namespace OpenGoldenRuler
         {
             switch (_currentMode)
             {
-                case RulerModes.GoldenRectangle:
+                case RulerModes.GoldenSpiral:
                     this.GoldenRectangle.Visibility = Visibility.Visible;
                     this.btnRectRotate.Visibility = Visibility.Visible;
                     btnClearPins.Visibility = Visibility.Collapsed;
@@ -382,7 +440,7 @@ namespace OpenGoldenRuler
         }
       
         /// <summary>
-        /// Used to process the reading of the ruler as user moving mouse on the ruler
+        /// Used to process the reading of the ruler as user moving mouse on the ruler, so the length of the ruler can be adjusted
         /// </summary>
         /// <param name="currentReading"></param>
         private void ProcessCurrentReading(double currentReading)
@@ -512,10 +570,13 @@ namespace OpenGoldenRuler
 
             PresentationSource source = PresentationSource.FromVisual(this);
 
-            System.Windows.Point targetPoints = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
+            if (source != null && source.CompositionTarget != null)
+            {
+                System.Windows.Point targetPoints = source.CompositionTarget.TransformFromDevice.Transform(locationFromScreen);
 
-            this.Left = targetPoints.X;
-            this.Top = targetPoints.Y;
+                this.Left = targetPoints.X;
+                this.Top = targetPoints.Y;
+            }
         }
 
        

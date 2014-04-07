@@ -8,7 +8,7 @@ using HLGranite.WPF;
 namespace OpenGoldenRuler
 {
     /// <summary>
-    /// This component is used to measure
+    /// This component is used to measure pins on canvas
     /// </summary>
     public class GapMeasurer:FrameworkElement
     {

@@ -10,7 +10,9 @@ namespace OpenGoldenRuler
     public static class GoldenUtils
     {
         /// <summary>
-        /// Used to sort a list of pin lines based on its position
+        /// Used to sort a list of pin lines based on its position. 
+        /// If ruler is horizontal, sort the pins from left to right.
+        /// If ruler is vertical, sort the pins from top to bottom.
         /// </summary>
         /// <param name="Pins">a list of pins</param>
         /// <param name="isHorizontal">true is the current ruler is horizontal or current angle is 0</param>
@@ -23,7 +25,7 @@ namespace OpenGoldenRuler
         /// <summary>
         /// Used to store a list of colors that will be used in this project
         /// </summary>
-        public static List<Color> ColorStack = new List<Color>(){Colors.Black, Colors.Orange, Colors.Yellow, Colors.Green, Colors.Aqua, Colors.Blue, Colors.Purple}; 
+        public static List<Color> ColorStack = new List<Color>(){Colors.Firebrick, Colors.Orange, Colors.Yellow, Colors.Green, Colors.Aqua, Colors.Blue, Colors.Purple}; 
 
         /// <summary>
         /// Draw an Arc of an ellipse or circle. Static extension method of DrawingContext.
@@ -208,7 +210,7 @@ namespace OpenGoldenRuler
 
     public enum RulerModes
     {
-        GoldenRectangle,
+        GoldenSpiral,
         Pin,
         None
     }

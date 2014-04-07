@@ -1,11 +1,17 @@
 ﻿
 using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Media;
+using HLGranite.WPF;
 
 namespace OpenGoldenRuler
 {
-    public class GoldenRectangle:FrameworkElement
+    /// <summary>
+    /// Represent a golden spiral inside a rectangle
+    /// http://en.wikipedia.org/wiki/Golden_spiral
+    /// </summary>
+    public class GoldenSpiral:FrameworkElement
     {
         private readonly Pen RedPen = new Pen(Brushes.Red, 2.0);
 
@@ -32,7 +38,7 @@ namespace OpenGoldenRuler
              DependencyProperty.Register(
                   "Length",
                   typeof(double),
-                  typeof(GoldenRectangle),
+                  typeof(GoldenSpiral),
                   new FrameworkPropertyMetadata(0D, FrameworkPropertyMetadataOptions.AffectsRender));
         #endregion
 
@@ -57,7 +63,7 @@ namespace OpenGoldenRuler
              DependencyProperty.Register(
                   "CurrentAngle",
                   typeof(int),
-                  typeof(GoldenRectangle),
+                  typeof(GoldenSpiral),
                   new FrameworkPropertyMetadata(0, FrameworkPropertyMetadataOptions.AffectsRender));
         #endregion
 
@@ -122,8 +128,12 @@ namespace OpenGoldenRuler
             BlackPen = new Pen(new SolidColorBrush(GoldenUtils.ColorStack[maxLevel % GoldenUtils.ColorStack.Count]), 1.5);
 
             drawingContext.DrawRectangle(Brushes.Transparent, BlackPen, new Rect(startPoint, newRectSize));
-            drawingContext.DrawRectangle(Brushes.Transparent, BlackPen, new Rect(drawPoint, newSquareSize));
             drawingContext.DrawQuarterCicle(RedPen, Brushes.Transparent, new Rect(drawPoint, newSquareSize), absCurrentAngle + 180, 90);
+
+            Rect square = new Rect(drawPoint, newSquareSize);
+            drawingContext.DrawRectangle(Brushes.Transparent, BlackPen, square);
+            FormattedText ft = new FormattedText(Math.Round(square.Size.Height, 3).ToString(), CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("Arial"), DipHelper.PtToDip(8), BlackPen.Brush);
+            if(ft.Height < square.Height) drawingContext.DrawText(ft, new Point(square.X + square.Height/2.8, square.Y + square.Height/2.2));
 
             currentAngle += 90;
 
