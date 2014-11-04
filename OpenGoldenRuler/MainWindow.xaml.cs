@@ -77,7 +77,7 @@ namespace OpenGoldenRuler
         /// <summary>
         /// Indicate the mode the ruler is working on
         /// </summary>
-        private RulerModes _currentMode = RulerModes.GoldenSpiral;
+        private RulerModes _currentMode = RulerModes.Pin;
 
         /// <summary>
         /// This control is used to measure the distance between different pins

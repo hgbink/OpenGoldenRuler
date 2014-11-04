@@ -19,8 +19,8 @@
                     <MenuItem Header="Vertical (Ctrl+R)" IsCheckable="True" Checked="MenuItem_OnClick" openGoldenRuler:MenuItemExtensions.GroupName="RulerAlignment"/>
                     <Separator />
 
-                    <MenuItem Header="Golden spiral (Ctrl+M)" IsCheckable="True" IsChecked="True" Checked="MenuItem_OnClick" openGoldenRuler:MenuItemExtensions.GroupName="RulerMode"/>
                     <MenuItem Header="Pin (Ctrl+M)" IsCheckable="True" Checked="MenuItem_OnClick" openGoldenRuler:MenuItemExtensions.GroupName="RulerMode"/>
+                    <MenuItem Header="Golden spiral (Ctrl+M)" IsCheckable="True" IsChecked="True" Checked="MenuItem_OnClick" openGoldenRuler:MenuItemExtensions.GroupName="RulerMode"/>
                     <MenuItem Header="Standard (Ctrl+M)" IsCheckable="True" Checked="MenuItem_OnClick"  openGoldenRuler:MenuItemExtensions.GroupName="RulerMode"/>
                     <Separator />
                     
